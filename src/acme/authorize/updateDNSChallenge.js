@@ -22,22 +22,28 @@ const dnsPreCheck = (domain, expect) => (tryCount) => {
   return resolveTxt(`_acme-challenge.${domain}`)
   .then(data => {
     ++tryCount
+    console.log(`Attempt ${tryCount} to resolve TXT record for ${domain} completed`)
     return {
       tryCount,
       result: arrayContainsArray(flatten(data), expect)
     }
   })
   .catch(e => {
+    console.log(`Attempt ${tryCount} to resolve TXT record for ${domain} failed`)
     if (e.code === 'ENODATA' || e.code === 'ENOTFOUND') {
       ++tryCount
       return { tryCount, result: false }
-    } else { throw e }
+    } else {
+      console.log(`Attempt ${tryCount} to resolve TXT record for ${domain} failed and won't be executed again`)
+      throw e
+    }
   })
 }
 
 const validateDNSChallenge = (domain, dnsChallengeTexts) =>
   retry(0, dnsPreCheck(domain, dnsChallengeTexts))
   .then(data => {
+    console.log(`validatingDNS Challenge for ${domain}`)
     if (data.result) {
       return data.result
     } else {
