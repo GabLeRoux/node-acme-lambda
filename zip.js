@@ -10,8 +10,5 @@ zipfile.on('error', (err) => {
   throw err
 })
 zipfile.pipe(output)
-zipfile.file('app.js')
-zipfile.file('config.js')
-zipfile.glob('src/**')
-zipfile.glob('./build/**')
+zipfile.directory('build', false)
 zipfile.finalize()

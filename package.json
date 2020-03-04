@@ -9,7 +9,7 @@
   },
   "scripts": {
     "clean": "rm dist*.zip || true && rm -rf build",
-    "dist": "mkdir build && npm install && npm prune --production && mv node_modules ./build && npm install && node zip.js",
+    "dist": "mkdir build && npm install && npm prune --production && mv node_modules ./build && cp {config.js,app.js} ./build/ && cp -r ./src ./build/ && npm install && node zip.js",
     "pems": "node bin/write_pems.js",
     "import": "node bin/importToACM.js",
     "local-cert": "node bin/local.js",
