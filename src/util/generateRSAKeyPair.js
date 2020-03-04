@@ -9,9 +9,9 @@ const generateKeyPair = promisify(RSA.generateKeypair)
 
 const generatePair = () =>
   generateKeyPair(bitlen, exp, options)
-  .catch((e) => {
-    console.error(`Couldn't generate RSA keypair`, e)
-    throw e
-  })
+    .catch((e) => {
+      console.error('Couldn\'t generate RSA keypair', e)
+      throw e
+    })
 
 module.exports = generatePair

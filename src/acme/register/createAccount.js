@@ -6,8 +6,8 @@ const config = require('../../../config')
 const saveAccount = data => {
   const account = {
     key: data.keypair,
-    'url': data.location,
-    'agreement': data.agreement
+    url: data.location,
+    agreement: data.agreement
   }
   return saveFile(
     config['s3-account-bucket'],
@@ -15,12 +15,12 @@ const saveAccount = data => {
     config['acme-account-file'],
     JSON.stringify(account)
   )
-  .then(() => account)
+    .then(() => account)
 }
 
 const createAccount = acctPromise =>
   generateRSAKeyPair()
-  .then(acctPromise)
-  .then(saveAccount)
+    .then(acctPromise)
+    .then(saveAccount)
 
 module.exports = createAccount

@@ -4,28 +4,28 @@ const config = require('./config')
 
 const single = (key, domains) =>
   isExpired(key)
-  .then(expired =>
-    (expired || config["force-renewal"]
-      ? generateCertificate({key, domains})
-      : {
-        err: false,
-        msg: `Certificate for ${key} is still valid, going back to bed.`
-      }
+    .then(expired =>
+      (expired || config['force-renewal']
+        ? generateCertificate({ key, domains })
+        : {
+          err: false,
+          msg: `Certificate for ${key} is still valid, going back to bed.`
+        }
+      )
     )
-  )
-  .catch(err => ({
-    err: true,
-    msg: `Updating cert for ${key}, received err ${err}, ${err.stack}`
-  }))
+    .catch(err => ({
+      err: true,
+      msg: `Updating cert for ${key}, received err ${err}, ${err.stack}`
+    }))
 
 const certificates = (certDefinitions) =>
   Object.keys(certDefinitions)
-  .map(certKey =>
-    single(certKey, certDefinitions[certKey])
-  )
+    .map(certKey =>
+      single(certKey, certDefinitions[certKey])
+    )
 
 const updateCertificates = (options, context) =>
   Promise.all(certificates(config['certificate-info']))
-  .then(context.succeed)
+    .then(context.succeed)
 
 module.exports = { handler: updateCertificates }

@@ -14,14 +14,14 @@ module.exports = certKey =>
     config['s3-folder'],
     `${certKey}.json`
   )
-  .then((data) =>
-    certInValid(forge.pki.certificateFromPem(JSON.parse(data.Body.toString()).cert), new Date())
-  )
-  .catch((e) => {
-    if (e.statusCode === 404) {
-      console.log(`Certificate with key ${certKey} is missing, going to regenerate.`)
-      return true
-    }
-    console.error('Error while calculating cert expiration', e)
-    throw e
-  })
+    .then((data) =>
+      certInValid(forge.pki.certificateFromPem(JSON.parse(data.Body.toString()).cert), new Date())
+    )
+    .catch((e) => {
+      if (e.statusCode === 404) {
+        console.log(`Certificate with key ${certKey} is missing, going to regenerate.`)
+        return true
+      }
+      console.error('Error while calculating cert expiration', e)
+      throw e
+    })

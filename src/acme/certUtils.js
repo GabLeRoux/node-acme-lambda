@@ -17,4 +17,4 @@ const toStandardB64 = str => {
 const toPEM = cert =>
   `-----BEGIN CERTIFICATE-----\n${toStandardB64(cert.toString('base64')).match(/.{1,64}/g).join('\n')}\n-----END CERTIFICATE-----\n`
 
-module.exports = {toIssuerCert, toPEM, toStandardB64}
+module.exports = { toIssuerCert, toPEM, toStandardB64 }

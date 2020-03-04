@@ -6,9 +6,9 @@ const saveFile = (bucket, siteId, fileName, fileData, options) =>
     Key: `${siteId}/${fileName}`,
     Body: new Buffer(fileData)
   }, options)).promise()
-  .catch((e) => {
-    console.error(`Couldn't write s3://${bucket}/${siteId}/${fileName}`, e)
-    throw e
-  })
+    .catch((e) => {
+      console.error(`Couldn't write s3://${bucket}/${siteId}/${fileName}`, e)
+      throw e
+    })
 
 module.exports = saveFile

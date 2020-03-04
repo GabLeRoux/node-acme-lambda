@@ -4,7 +4,7 @@ const RSA = require('rsa-compat').RSA
 const crypto = require('crypto')
 const dns = require('dns')
 const config = require('../../../config')
-const {promisify} = require('util')
+const { promisify } = require('util')
 const resolveTxt = promisify(dns.resolveTxt)
 const urlB64 = require('../urlB64')
 const retry = require('../../retry')(config['acme-dns-retry-delay-ms'], config['acme-dns-retry'])
@@ -13,57 +13,57 @@ const getTokenDigest = (dnsChallenge, acctKeyPair) =>
   crypto.createHash('sha256').update(`${dnsChallenge.token}.${RSA.thumbprint(acctKeyPair)}`).digest()
 
 const arrayContainsArray = (superset, subset) =>
-    subset.every(value => superset.indexOf(value) >= 0)
+  subset.every(value => superset.indexOf(value) >= 0)
 
 const flatten = input => Array.prototype.concat.apply([], input)
 
 const dnsPreCheck = (domain, expect) => (tryCount) => {
   console.log(`Attempt ${tryCount + 1} to resolve TXT record for ${domain}`)
   return resolveTxt(`_acme-challenge.${domain}`)
-  .then(data => {
-    ++tryCount
-    console.log(`Attempt ${tryCount} to resolve TXT record for ${domain} completed`)
-    return {
-      tryCount,
-      result: arrayContainsArray(flatten(data), expect)
-    }
-  })
-  .catch(e => {
-    console.log(`Attempt ${tryCount} to resolve TXT record for ${domain} failed`)
-    if (e.code === 'ENODATA' || e.code === 'ENOTFOUND') {
+    .then(data => {
       ++tryCount
-      return { tryCount, result: false }
-    } else {
-      console.log(`Attempt ${tryCount} to resolve TXT record for ${domain} failed and won't be executed again`)
-      throw e
-    }
-  })
+      console.log(`Attempt ${tryCount} to resolve TXT record for ${domain} completed`)
+      return {
+        tryCount,
+        result: arrayContainsArray(flatten(data), expect)
+      }
+    })
+    .catch(e => {
+      console.log(`Attempt ${tryCount} to resolve TXT record for ${domain} failed`)
+      if (e.code === 'ENODATA' || e.code === 'ENOTFOUND') {
+        ++tryCount
+        return { tryCount, result: false }
+      } else {
+        console.log(`Attempt ${tryCount} to resolve TXT record for ${domain} failed and won't be executed again`)
+        throw e
+      }
+    })
 }
 
 const validateDNSChallenge = (domain, dnsChallengeTexts) =>
   retry(0, dnsPreCheck(domain, dnsChallengeTexts))
-  .then(data => {
-    console.log(`validatingDNS Challenge for ${domain}`)
-    if (data.result) {
-      return data.result
-    } else {
-      throw new Error(`Could not pre-validate DNS TXT record. Didn't find ${dnsChallengeTexts} in _acme-challenge.${domain}`)
-    }
-  })
+    .then(data => {
+      console.log(`validatingDNS Challenge for ${domain}`)
+      if (data.result) {
+        return data.result
+      } else {
+        throw new Error(`Could not pre-validate DNS TXT record. Didn't find ${dnsChallengeTexts} in _acme-challenge.${domain}`)
+      }
+    })
 
 const updateDNSChallenge = (domain, dnsChallenges, acctKeyPair) => {
   const domainName = (typeof domain === 'string') ? domain : domain.name
   const dnsChallengeTexts = dnsChallenges.map(dnsChallenge => urlB64(getTokenDigest(dnsChallenge, acctKeyPair)))
   return getHostedZoneId(domain)
-  .then(id => {
-    console.log(`Updating DNS TXT Record for ${domainName} to contain ${dnsChallengeTexts} in Route53 hosted zone ${id}`)
-    return updateTXTRecord(id, domainName, dnsChallengeTexts)
-  })
-  .then(updated => validateDNSChallenge(domainName, dnsChallengeTexts))
-  .catch(e => {
-    console.error(`Couldn't write token digest to DNS record.`, e)
-    throw e
-  })
+    .then(id => {
+      console.log(`Updating DNS TXT Record for ${domainName} to contain ${dnsChallengeTexts} in Route53 hosted zone ${id}`)
+      return updateTXTRecord(id, domainName, dnsChallengeTexts)
+    })
+    .then(updated => validateDNSChallenge(domainName, dnsChallengeTexts))
+    .catch(e => {
+      console.error('Couldn\'t write token digest to DNS record.', e)
+      throw e
+    })
 }
 
 module.exports = updateDNSChallenge

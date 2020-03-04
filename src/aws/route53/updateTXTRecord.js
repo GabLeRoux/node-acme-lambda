@@ -9,7 +9,7 @@ const updateTXTRecord = (hostedZoneId, domain, digests) => {
           ResourceRecordSet: {
             Name: `_acme-challenge.${domain}`,
             Type: 'TXT',
-            ResourceRecords: digests.map(digest => ({Value: JSON.stringify(digest)})),
+            ResourceRecords: digests.map(digest => ({ Value: JSON.stringify(digest) })),
             TTL: 1
           }
         }
@@ -19,9 +19,9 @@ const updateTXTRecord = (hostedZoneId, domain, digests) => {
     HostedZoneId: hostedZoneId
   }
   return getRoute53().changeResourceRecordSets(toSend).promise()
-  .catch((e) => {
-    console.error(`Couldn't write TXT record _acme-challenge.${domain}`, e)
-    throw e
-  })
+    .catch((e) => {
+      console.error(`Couldn't write TXT record _acme-challenge.${domain}`, e)
+      throw e
+    })
 }
 module.exports = updateTXTRecord

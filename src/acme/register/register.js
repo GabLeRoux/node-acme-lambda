@@ -9,9 +9,9 @@ const sendRefresh = (registration) =>
   }, registration.keypair, registration.location)
 
 const checkRefresh = (registration) => (data) => {
-  const refreshedAgreement = toAgreement(data.header['link'])
+  const refreshedAgreement = toAgreement(data.header.link)
   return ((registration.agreement !== refreshedAgreement.agreement)
-    ? refreshRegistration({ //NOSONAR
+    ? refreshRegistration({ // NOSONAR
       keypair: registration.keypair,
       location: registration.location,
       agreement: refreshedAgreement.agreement
@@ -25,21 +25,21 @@ const checkRefresh = (registration) => (data) => {
 
 const refreshRegistration = (registration) =>
   sendRefresh(registration)
-  .then(checkRefresh(registration)) //NOSONAR
+    .then(checkRefresh(registration)) // NOSONAR
 
 const register = regUrl => keypair =>
   sendSignedRequest({
     resource: 'new-reg',
-    contact: [ `mailto:${config['acme-account-email']}` ]
+    contact: [`mailto:${config['acme-account-email']}`]
   }, keypair, regUrl)
-  .then(data =>
-    refreshRegistration(
-      Object.assign({
-        keypair: keypair,
-        location: data.header['location']
-      },
-      toAgreement(data.header['link']))
+    .then(data =>
+      refreshRegistration(
+        Object.assign({
+          keypair: keypair,
+          location: data.header.location
+        },
+        toAgreement(data.header.link))
+      )
     )
-  )
 
 module.exports = register

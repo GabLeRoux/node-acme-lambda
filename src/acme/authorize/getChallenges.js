@@ -8,7 +8,7 @@ const validateChallenges = (domain, accountKeyPair, challengeResponse) => {
   const dnsChallenge = getDNSChallenge(challengeResponse.challenges)
   return Promise.all([
     updateDNSChallenge(domain, [dnsChallenge], accountKeyPair)
-    .then(() => sendDNSChallengeValidation(dnsChallenge, accountKeyPair))
+      .then(() => sendDNSChallengeValidation(dnsChallenge, accountKeyPair))
   ])
 }
 
@@ -24,12 +24,12 @@ const getChallenges = (domains, keypair, authzUrl) =>
           value: domainName
         }
       }, keypair, authzUrl)
-      .then(data => validateChallenges(domain, keypair, data.body))
+        .then(data => validateChallenges(domain, keypair, data.body))
     })
   )
-  .catch((err) => {
-    console.error('Experienced error getting challenges', err)
-    throw err
-  })
+    .catch((err) => {
+      console.error('Experienced error getting challenges', err)
+      throw err
+    })
 
 module.exports = getChallenges

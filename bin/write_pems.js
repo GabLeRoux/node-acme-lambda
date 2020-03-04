@@ -15,23 +15,23 @@ const getPEMsForCertInfo = (key) =>
     config['s3-folder'],
     `${key}.json`
   )
-  .then((data) => JSON.parse(data.Body.toString()))
-  .then((certJSON) => {
-    console.log(`About to write PEM files for ${key}..`)
-    try {
-      fs.writeFileSync(`./${key}.pem`, certJSON.cert.toString())
-      if (certJSON.issuerCert) {
-        fs.writeFileSync(`./${key}-chain.pem`, certJSON.issuerCert.toString())
+    .then((data) => JSON.parse(data.Body.toString()))
+    .then((certJSON) => {
+      console.log(`About to write PEM files for ${key}..`)
+      try {
+        fs.writeFileSync(`./${key}.pem`, certJSON.cert.toString())
+        if (certJSON.issuerCert) {
+          fs.writeFileSync(`./${key}-chain.pem`, certJSON.issuerCert.toString())
+        }
+        fs.writeFileSync(`./${key}-key.pem`, certJSON.key.privateKeyPem.toString())
+      } catch (e) {
+        console.error('Error writing pem files', e)
       }
-      fs.writeFileSync(`./${key}-key.pem`, certJSON.key.privateKeyPem.toString())
-    } catch (e) {
-      console.error('Error writing pem files', e)
-    }
-  })
-  .catch()
+    })
+    .catch()
 
 const getAllPEMs = (sync) =>
   Promise.all(Object.keys(config['certificate-info']).map(getPEMsForCertInfo))
-  .then(() => sync.succeed('Wrote PEM files..'))
+    .then(() => sync.succeed('Wrote PEM files..'))
 
 getAllPEMs(testContext)

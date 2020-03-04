@@ -18,17 +18,17 @@ const saveCertificate = (data) =>
 
 const createCertificate = (certUrl, certInfo, acctKeyPair) => (authorizations) =>
   generateRSAKeyPair()
-  .then(domainKeypair =>
-    generateCSR(domainKeypair, certInfo.domains)
-    .then(newCertificate(acctKeyPair, authorizations, certUrl))
-    .then((certData) =>
-      saveCertificate({
-        key: certInfo.key,
-        keypair: domainKeypair,
-        cert: certData.cert,
-        issuerCert: certData.issuerCert
-      })
+    .then(domainKeypair =>
+      generateCSR(domainKeypair, certInfo.domains)
+        .then(newCertificate(acctKeyPair, authorizations, certUrl))
+        .then((certData) =>
+          saveCertificate({
+            key: certInfo.key,
+            keypair: domainKeypair,
+            cert: certData.cert,
+            issuerCert: certData.issuerCert
+          })
+        )
     )
-  )
 
 module.exports = createCertificate

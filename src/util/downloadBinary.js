@@ -13,5 +13,5 @@ const parser = (res, callback) => {
 
 module.exports = (url) =>
   agent.get(url)
-  .buffer(true).parse(parser)
-  .then((data) => data.body)
+    .buffer(true).parse(parser)
+    .then((data) => data.body)

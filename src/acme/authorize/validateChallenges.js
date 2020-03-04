@@ -8,5 +8,5 @@ module.exports = domain => {
       value: domainName
     }
   }, keypair, authzUrl)
-  .then(data => validateChallenges(domain, keypair, data.body))
+    .then(data => validateChallenges(domain, keypair, data.body))
 }

@@ -6,11 +6,11 @@ const sendDNSChallengeValidation = (dnsChallenges, acctKeyPair, nonceUrl, url) =
     sendSignedRequestV2({
       keyAuthorization: `${dnsChallenge.token}.${RSA.thumbprint(acctKeyPair)}`
     }, acctKeyPair, dnsChallenge.url, nonceUrl, url)
-    .then(({body}) => body)
-    .catch((e) => {
-      console.error(`Couldn't send DNS challenge verification.`, e)
-      throw e
-    })
+      .then(({ body }) => body)
+      .catch((e) => {
+        console.error('Couldn\'t send DNS challenge verification.', e)
+        throw e
+      })
   ))
 
 module.exports = sendDNSChallengeValidation

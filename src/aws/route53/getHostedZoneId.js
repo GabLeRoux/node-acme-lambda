@@ -9,11 +9,11 @@ const getHostedZoneId = (domain) => {
     ? domain.zoneLevels
     : 2
   return getRoute53().listHostedZones().promise()
-  .then((zones) => getDomainZone(domainName.split('.').slice(-1 * zoneLevels).join('.'), zones).Id)
-  .catch((e) => {
-    console.error(`Couldn't retrieve hosted zones from Route53`, e)
-    throw e
-  })
+    .then((zones) => getDomainZone(domainName.split('.').slice(-1 * zoneLevels).join('.'), zones).Id)
+    .catch((e) => {
+      console.error('Couldn\'t retrieve hosted zones from Route53', e)
+      throw e
+    })
 }
 
 module.exports = getHostedZoneId

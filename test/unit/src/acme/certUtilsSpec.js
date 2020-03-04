@@ -1,8 +1,7 @@
 const proxyquire = require('../../../proxyquire')
-const {toIssuerCert, toStandardB64, toPEM} = require('../../../../src/acme/certUtils')
+const { toIssuerCert, toStandardB64, toPEM } = require('../../../../src/acme/certUtils')
 
 describe('certUtils', () => {
-
   it('toIssuerCert functions as expected', () => {
     const result = toIssuerCert('blah<haha>;rel="up"someotherstuff"')
     result.should.eql('haha')
@@ -31,5 +30,4 @@ describe('certUtils', () => {
     const result = toStandardB64('somewords=plus_equals-th')
     result.should.eql('somewordsplus/equals+th=')
   })
-
 })
