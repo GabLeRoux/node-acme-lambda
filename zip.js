@@ -10,9 +10,8 @@ zipfile.on('error', (err) => {
   throw err
 })
 zipfile.pipe(output)
-zipfile.bulk([
-  { expand: true, cwd: './/', src: ['app.js', 'config.js'] },
-  { expand: true, cwd: './', src: ['src/**'] },
-  { expand: true, cwd: './build', src: ['**'] }
-])
+zipfile.file('app.js')
+zipfile.file('config.js')
+zipfile.glob('src/**')
+zipfile.glob('./build/**')
 zipfile.finalize()
