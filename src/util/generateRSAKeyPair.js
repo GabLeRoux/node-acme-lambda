@@ -1,5 +1,5 @@
 const RSA = require('rsa-compat').RSA
-const promisify = require('es6-promisify')
+const { promisify } = require('util')
 const config = require('../../config')
 
 const bitlen = config['acme-account-key-bits']
