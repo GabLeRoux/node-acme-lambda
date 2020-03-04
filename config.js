@@ -17,5 +17,6 @@ module.exports = {
   'acme-account-email': process.env.ACME_ACCOUNT_EMAIL || '<email-of-responsible-person>',
   'acme-account-key-bits': 2048,
   'acme-directory-url': process.env.USE_PRODUCTION ? productionDirectoryUrl : stagingDirectoryUrl,
-  'region': process.env.AWS_REGION || 'us-east-1'
+  'region': process.env.AWS_REGION || 'us-east-1',
+  'force-renewal': process.env.FORCE_RENEWAL
 }

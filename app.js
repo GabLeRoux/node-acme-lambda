@@ -5,7 +5,7 @@ const config = require('./config')
 const single = (key, domains) =>
   isExpired(key)
   .then(expired =>
-    (expired
+    (expired || config["force-renewal"]
       ? generateCertificate({key, domains})
       : {
         err: false,
