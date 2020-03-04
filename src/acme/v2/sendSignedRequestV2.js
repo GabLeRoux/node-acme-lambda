@@ -7,6 +7,7 @@ const sendSignedRequest = (payload, keypair, url, nonceUrl, kid = null) =>
   .then(nonce => {
     const {header} = RSA.signJws(keypair, new Buffer(JSON.stringify(payload)), nonce)
     const toSend = RSA.signJws(keypair, undefined, Object.assign(kid ? {kid, alg: header.alg} : header, {nonce, url}), new Buffer(JSON.stringify(payload)))
+    console.log(`Posting to ${url}`);
     return agent.post(url)
     .type('application/jose+json')
     .send(toSend)
